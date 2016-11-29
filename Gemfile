@@ -6,6 +6,7 @@ source "http://rubygems.org"
 gem 'paint', '~> 1.0'
 gem 'commander', '~> 4.2'
 gem 'octokit', '~> 4.6'
+gem 'bitbucket_rest_api', '~> 0.1.7'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
