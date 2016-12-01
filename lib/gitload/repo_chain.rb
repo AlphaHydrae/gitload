@@ -1,12 +1,18 @@
 module Gitload
-  class RepoList
-    attr_reader :repos
-    attr_accessor :root
+  class RepoChain
+    extend Forwardable
 
-    def initialize repos = [], options = {}
+    attr_reader :config
+    attr_reader :repos
+
+    def initialize config, repos = [], options = {}
+      @config = config
       @repos = repos
-      @root = options[:root]
       @rename = options[:rename]
+    end
+
+    def dup repos = nil
+      RepoChain.new @config, repos || @repos, rename: @rename
     end
 
     def << repo
@@ -15,15 +21,22 @@ module Gitload
     end
 
     def + repos
+      repos = repos.repos while repos.respond_to? :repos
       @repos += repos
       self
     end
 
-    def from name, options = {}
-      select do |repo|
-        repo.owner.downcase == name.to_s.downcase && options.fetch(:on, repo.source) == repo.source
-      end
+    alias_method :add, :+
+
+    def by name, options = {}
+      select{ |repo| repo.owner.downcase == name.to_s.downcase }
     end
+
+    def on *sources
+      select{ |repo| sources.include? repo.source }
+    end
+
+    alias_method :from, :on
 
     def named *criteria
       compiled_criteria = criteria.collect do |criterion|
@@ -46,11 +59,20 @@ module Gitload
     end
 
     def select &block
-      RepoList.new @repos.select(&block), options
+      dup @repos.select(&block)
+    end
+
+    def reject &block
+      dup @repos.reject(&block)
     end
 
     def rename pattern = nil, replacement = nil, &block
       @rename_block = block || Proc.new{ |name| name.sub pattern, replacement }
+      self
+    end
+
+    def prefix prefix
+      @prefix = prefix
       self
     end
 
@@ -59,23 +81,18 @@ module Gitload
     end
 
     def clone_to dest = nil
-      clone_repo :to, dest
+      clone_repos :to, dest
     end
 
     def clone_into dest = nil
-      clone_repo :into, dest
+      clone_repos :into, dest
     end
+
+    def_delegator :@config, :root
 
     private
 
-    def options
-      {
-        root: @root,
-        rename: @rename
-      }
-    end
-
-    def clone_repo method, dest
+    def clone_repos method, dest
       dest = if !dest
         File.expand_path(root.to_s)
       elsif root
@@ -92,13 +109,14 @@ module Gitload
 
         repo_dest = if method == :into
           name = repo.name
+          name = name.index(@prefix) == 0 ? name : "#{@prefix}#{name}" if @prefix
           name = @rename_block.call name if @rename_block
           File.join dest, name
         else
           dest
         end
 
-        repo.clone_to repo_dest
+        repo.clone_to repo_dest, @config.clone_options
       end
     end
   end

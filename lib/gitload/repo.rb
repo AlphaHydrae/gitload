@@ -15,9 +15,8 @@ module Gitload
       @fork
     end
 
-    def clone_url
-      # TODO: allow clone url type to be configured
-      @clone_urls[:ssh]
+    def clone_url options = {}
+      @clone_urls[options[:clone_url_type] || :ssh]
     end
 
     def clone_to dest, options = {}
@@ -28,16 +27,15 @@ module Gitload
         return
       end
 
-      url = Shellwords.shellescape clone_url
-      dest = Shellwords.shellescape dest
+      command = CommandLine::Command.new :git, :clone, clone_url(options), dest
 
-      #puts
-      #system "git clone #{url} #{dest}"
-      puts "Clone #{url} to #{dest}"
+      if true || options[:dry_run]
+        puts Paint[command.to_s, :yellow]
+      else
+        #command.execute
+      end
 
       @cloned = true
     end
   end
 end
-
-Dir[File.join File.dirname(__FILE__), 'repos', '*.rb'].each{ |lib| require lib }
