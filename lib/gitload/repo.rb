@@ -2,7 +2,8 @@ require 'shellwords'
 
 module Gitload
   class Repo
-    attr_reader :source, :api_data, :name, :fork, :owner, :owner_type, :clone_urls
+    attr_reader :clone_urls
+    attr_accessor :source, :api_data, :name, :fork, :owner, :owner_type
 
     def initialize source, api_data
       @source = source
@@ -15,8 +16,8 @@ module Gitload
       @fork
     end
 
-    def clone_url options = {}
-      @clone_urls[options[:clone_url_type] || :ssh]
+    def clone_url type = nil
+      @clone_urls[type || :ssh]
     end
 
     def clone_to dest, options = {}
@@ -27,12 +28,12 @@ module Gitload
         return
       end
 
-      command = CommandLine::Command.new :git, :clone, clone_url(options), dest
+      command = [ :git, :clone, clone_url(options[:clone_url_type]), dest ]
 
-      if true || options[:dry_run]
-        puts Paint[command.to_s, :yellow]
+      if options[:dry_run]
+        CommandLine.print CommandLine.escape(command), color: :yellow
       else
-        #command.execute
+        CommandLine.execute command
       end
 
       @cloned = true

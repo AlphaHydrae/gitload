@@ -1,10 +1,12 @@
 module Gitload
   class Config
     attr_accessor :root
+    attr_accessor :dry_run
     attr_accessor :clone_url_type
 
     def initialize options = {}
       @root = options[:root]
+      @dry_run = options.dry_run
       @clone_url_type = options[:clone_url_type]
     end
 
@@ -15,6 +17,7 @@ module Gitload
 
     def clone_options
       {
+        dry_run: @dry_run,
         clone_url_type: @clone_url_type
       }
     end

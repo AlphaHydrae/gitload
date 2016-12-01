@@ -17,6 +17,7 @@ group :development do
   gem 'rake', '~> 11.0'
   gem 'rspec', '~> 3.1'
   gem 'rspec-its', '~> 1.1'
+  gem 'rspec-collection_matchers', '~> 1.1'
   gem 'fakefs', '~> 0.9.0', :require => 'fakefs/safe'
   gem 'jeweler', '~> 2.0'
   gem 'rake-version', '~> 1.0'

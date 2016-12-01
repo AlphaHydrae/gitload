@@ -2,19 +2,27 @@ require 'shellwords'
 
 module Gitload
   module CommandLine
-    class Command
-      attr_reader :args
-
-      def initialize *args
-        @args = args
+    class << self
+      def execute *args
+        system escape_args(args.flatten)
       end
 
-      def execute
-        system to_s
+      def escape args
+        args.collect{ |arg| Shellwords.shellescape arg.to_s }.join(' ')
       end
 
-      def to_s
-        @args.collect{ |arg| Shellwords.shellescape arg.to_s }.join(' ')
+      def print message, options = {}
+        if options[:color]
+          paint_args = options[:color].kind_of?(Array) ? options[:color] : [ options[:color] ]
+          paint_args.unshift message
+          message = Paint[*paint_args]
+        end
+
+        if options.fetch :new_line, true
+          puts message
+        else
+          print message
+        end
       end
     end
   end
