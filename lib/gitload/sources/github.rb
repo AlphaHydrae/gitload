@@ -6,7 +6,9 @@ module Gitload
     class GitHub
       include Source
 
-      def initialize options = {}
+      def initialize config, options = {}
+        @config = config
+
         ::Octokit.configure do |c|
           c.auto_paginate = true
           c.access_token = options.fetch :access_token, ENV['GITLOAD_GITHUB_TOKEN']
@@ -14,10 +16,10 @@ module Gitload
       end
 
       def repos
-        #data = ::Octokit.repositories.collect &:to_attrs
-        #File.open('tmp/github.json', 'w'){ |f| f.write JSON.dump(data) }
 
-        data = JSON.parse File.read('tmp/github.json')
+        data = @config.load_or_cache_data 'github' do
+          Utils.stringify_keys ::Octokit.repositories.collect(&:to_attrs)
+        end
 
         data.collect{ |d| Repo.new d }
       end

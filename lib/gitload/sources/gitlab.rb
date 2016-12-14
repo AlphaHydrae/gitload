@@ -6,7 +6,9 @@ module Gitload
     class GitLab
       include Source
 
-      def initialize options = {}
+      def initialize config, options = {}
+        @config = config
+
         ::Gitlab.configure do |c|
           c.endpoint = 'https://gitlab.com/api/v3'
           c.private_token = options.fetch :private_token, ENV['GITLOAD_GITLAB_TOKEN']
@@ -14,10 +16,10 @@ module Gitload
       end
 
       def repos
-        #data = ::Gitlab.projects.auto_paginate.collect &:to_h
-        #File.open('tmp/gitlab.json', 'w'){ |f| f.write JSON.dump(data) }
 
-        data = JSON.parse File.read('tmp/gitlab.json')
+        data = @config.load_or_cache_data 'gitlab' do
+          Utils.stringify_keys(::Gitlab.projects.auto_paginate.collect(&:to_h))
+        end
 
         data.collect{ |d| Repo.new d }
       end

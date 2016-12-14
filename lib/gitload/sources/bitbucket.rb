@@ -6,17 +6,21 @@ module Gitload
     class Bitbucket
       include Source
 
-      def initialize options = {}
+      def initialize config, options = {}
+
+        @config = config
+
         user = options.fetch :user, ENV['GITLOAD_BITBUCKET_USER']
         password = options.fetch :password, ENV['GITLOAD_BITBUCKET_TOKEN']
         @bitbucket_api = ::BitBucket.new basic_auth: "#{user}:#{password}"
       end
 
       def repos
-        #data = @bitbucket_api.repos.list
-        #File.open('tmp/bitbucket.json', 'w'){ |f| f.write JSON.dump(data) }
 
-        data = JSON.parse File.read('tmp/bitbucket.json')
+        data = @config.load_or_cache_data 'bitbucket' do
+          Utils.stringify_keys(@bitbucket_api.repos.list)
+        end
+
         data = data.select{ |repo| repo['scm'] == 'git' }
 
         data.collect{ |d| Repo.new d }

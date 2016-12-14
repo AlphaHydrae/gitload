@@ -10,6 +10,8 @@ global_option '-c', '--config PATH', 'Use a custom configuration file (defaults 
 command :load do |c|
   c.syntax = 'gitload load'
   c.description = 'Clones all configured repositories (default action)'
+  c.option '--cache', 'Cache the downloaded repository data'
+  c.option '--clear-cache', 'Clears the latest cache data'
   c.option '--dry-run', 'Show all repositories that will be cloned but without cloning them'
   c.action do |args,options|
     Gitload::Commands::Load.new(options).run
