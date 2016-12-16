@@ -11,32 +11,26 @@ module Gitload
       @rename = options[:rename]
     end
 
-    def dup repos = nil
-      RepoChain.new @config, repos || @repos, rename: @rename
-    end
-
     def << repo
       @repos << repo
       self
     end
 
-    def + repos
+    def add repos
+      # TODO: remove
       repos = repos.repos while repos.respond_to? :repos
       @repos += repos
       self
     end
 
-    alias_method :add, :+
-
-    def by name, options = {}
-      select{ |repo| repo.owner.downcase == name.to_s.downcase }
+    def by *owners
+      normalized_owners = owners.collect{ |owner| owner.to_s.downcase }
+      select{ |repo| normalized_owners.include? repo.owner.to_s.downcase }
     end
 
-    def on *sources
+    def from *sources
       select{ |repo| sources.include? repo.source }
     end
-
-    alias_method :from, :on
 
     def named *criteria
       compiled_criteria = criteria.collect do |criterion|
@@ -91,6 +85,10 @@ module Gitload
     def_delegator :@config, :root
 
     private
+
+    def dup repos = nil
+      RepoChain.new @config, repos || @repos, rename: @rename
+    end
 
     def clone_repos method, dest
       dest = if !dest
