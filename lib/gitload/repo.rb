@@ -3,7 +3,7 @@ require 'shellwords'
 module Gitload
   class Repo
     attr_reader :clone_urls
-    attr_accessor :source, :api_data, :name, :fork, :owner, :owner_type
+    attr_accessor :source, :api_data, :name, :fork, :owner, :owner_type, :cloned
 
     def initialize source, api_data
       @source = source
@@ -12,19 +12,23 @@ module Gitload
       @clone_urls = {}
     end
 
+    def cloned?
+      !!@cloned
+    end
+
     def fork?
-      @fork
+      !!@fork
     end
 
     def clone_url type = nil
-      @clone_urls[type || :ssh]
+      @clone_urls[type || :http]
     end
 
     def clone_to dest, options = {}
       if @cloned && !options[:force]
         return
       elsif File.exists? dest
-        puts Paint["#{dest} already exists", :green]
+        CommandLine.print "#{dest} already exists", color: :green
         return
       end
 
