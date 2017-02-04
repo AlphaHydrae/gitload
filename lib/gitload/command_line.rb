@@ -4,7 +4,7 @@ module Gitload
   module CommandLine
     class << self
       def execute *args
-        system escape_args(args.flatten)
+        system escape(args.flatten)
       end
 
       def escape args
