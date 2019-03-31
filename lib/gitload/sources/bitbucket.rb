@@ -10,13 +10,14 @@ module Gitload
 
         @config = config
 
-        user = options.fetch :user, ENV['GITLOAD_BITBUCKET_USER']
+        @user = options.fetch :user, ENV['GITLOAD_BITBUCKET_USER']
         password = options.fetch :password, ENV['GITLOAD_BITBUCKET_TOKEN']
-        @bitbucket_api = ::BitBucket.new basic_auth: "#{user}:#{password}"
+        @bitbucket_api = ::BitBucket.new basic_auth: "#{@user}:#{password}"
       end
 
       def repos
 
+        puts 'Loading BitBucket projects...'
         data = @config.load_or_cache_data 'bitbucket' do
           Utils.stringify_keys(@bitbucket_api.repos.list)
         end
@@ -36,7 +37,7 @@ module Gitload
           @fork = api_data['is_fork']
 
           @clone_urls[:ssh] = "git@bitbucket.org:#{@owner}/#{@name}.git"
-          @clone_urls[:http] = "https://AlphaHydrae@bitbucket.org/#{@owner}/#{@name}.git"
+          @clone_urls[:http] = "https://#{@user}@bitbucket.org/#{@owner}/#{@name}.git"
         end
       end
     end

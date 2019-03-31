@@ -17,6 +17,7 @@ module Gitload
 
       def repos
 
+        puts 'Loading GitHub projects...'
         data = @config.load_or_cache_data 'github' do
           Utils.stringify_keys ::Octokit.repositories.collect(&:to_attrs)
         end
