@@ -5,4 +5,10 @@ module Gitload
   VERSION = '1.0.1'
 end
 
-Dir[File.join File.dirname(__FILE__), File.basename(__FILE__, '.*'), '*.rb'].each{ |lib| require lib }
+require 'gitload/command_line'
+require 'gitload/commands'
+require 'gitload/config'
+require 'gitload/repo'
+require 'gitload/repo_chain'
+require 'gitload/sources'
+require 'gitload/utils'
