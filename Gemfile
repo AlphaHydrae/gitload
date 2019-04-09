@@ -22,4 +22,5 @@ group :development do
   gem 'jeweler', '~> 2.0'
   gem 'rake-version', '~> 1.0'
   gem 'simplecov', '~> 0.16.1'
+  gem 'coveralls', '~> 0.8.22', require: false
 end
