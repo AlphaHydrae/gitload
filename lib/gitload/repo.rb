@@ -28,6 +28,7 @@ module Gitload
       if @cloned && !options[:force]
         return
       elsif File.exists? dest
+        @cloned = true
         CommandLine.print "#{dest} already exists", color: :green
         return
       end
