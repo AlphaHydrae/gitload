@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Simon Oulevay (Alpha Hydrae)".freeze]
-  s.date = "2019-04-09"
+  s.date = "2020-09-29"
   s.description = "Gitload provides a DSL to easily clone all your repositories from GitHub and other providers.".freeze
   s.email = "git@alphahydrae.com".freeze
   s.executables = ["gitload".freeze]
@@ -41,41 +41,28 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "https://github.com/AlphaHydrae/gitload".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.0.3".freeze
+  s.rubygems_version = "3.1.2".freeze
   s.summary = "Gitload downloads your repositories.".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
+  end
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<paint>.freeze, ["~> 2.1"])
-      s.add_runtime_dependency(%q<commander>.freeze, ["~> 4.2"])
-      s.add_runtime_dependency(%q<octokit>.freeze, ["~> 4.6"])
-      s.add_runtime_dependency(%q<bitbucket_rest_api>.freeze, ["~> 0.1.7"])
-      s.add_runtime_dependency(%q<gitlab>.freeze, ["~> 4.10"])
-      s.add_development_dependency(%q<rake>.freeze, ["~> 12.3"])
-      s.add_development_dependency(%q<rspec>.freeze, ["~> 3.1"])
-      s.add_development_dependency(%q<rspec-its>.freeze, ["~> 1.1"])
-      s.add_development_dependency(%q<rspec-collection_matchers>.freeze, ["~> 1.1"])
-      s.add_development_dependency(%q<fakefs>.freeze, ["~> 0.20.0"])
-      s.add_development_dependency(%q<jeweler>.freeze, ["~> 2.0"])
-      s.add_development_dependency(%q<rake-version>.freeze, ["~> 1.0"])
-      s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.16.1"])
-    else
-      s.add_dependency(%q<paint>.freeze, ["~> 2.1"])
-      s.add_dependency(%q<commander>.freeze, ["~> 4.2"])
-      s.add_dependency(%q<octokit>.freeze, ["~> 4.6"])
-      s.add_dependency(%q<bitbucket_rest_api>.freeze, ["~> 0.1.7"])
-      s.add_dependency(%q<gitlab>.freeze, ["~> 4.10"])
-      s.add_dependency(%q<rake>.freeze, ["~> 12.3"])
-      s.add_dependency(%q<rspec>.freeze, ["~> 3.1"])
-      s.add_dependency(%q<rspec-its>.freeze, ["~> 1.1"])
-      s.add_dependency(%q<rspec-collection_matchers>.freeze, ["~> 1.1"])
-      s.add_dependency(%q<fakefs>.freeze, ["~> 0.20.0"])
-      s.add_dependency(%q<jeweler>.freeze, ["~> 2.0"])
-      s.add_dependency(%q<rake-version>.freeze, ["~> 1.0"])
-      s.add_dependency(%q<simplecov>.freeze, ["~> 0.16.1"])
-    end
+  if s.respond_to? :add_runtime_dependency then
+    s.add_runtime_dependency(%q<paint>.freeze, ["~> 2.1"])
+    s.add_runtime_dependency(%q<commander>.freeze, ["~> 4.2"])
+    s.add_runtime_dependency(%q<octokit>.freeze, ["~> 4.6"])
+    s.add_runtime_dependency(%q<bitbucket_rest_api>.freeze, ["~> 0.1.7"])
+    s.add_runtime_dependency(%q<gitlab>.freeze, ["~> 4.10"])
+    s.add_development_dependency(%q<rake>.freeze, ["~> 12.3"])
+    s.add_development_dependency(%q<rspec>.freeze, ["~> 3.1"])
+    s.add_development_dependency(%q<rspec-its>.freeze, ["~> 1.1"])
+    s.add_development_dependency(%q<rspec-collection_matchers>.freeze, ["~> 1.1"])
+    s.add_development_dependency(%q<fakefs>.freeze, ["~> 0.20.0"])
+    s.add_development_dependency(%q<jeweler>.freeze, ["~> 2.0"])
+    s.add_development_dependency(%q<rake-version>.freeze, ["~> 1.0"])
+    s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.16.1"])
+    s.add_development_dependency(%q<coveralls>.freeze, ["~> 0.8.22"])
   else
     s.add_dependency(%q<paint>.freeze, ["~> 2.1"])
     s.add_dependency(%q<commander>.freeze, ["~> 4.2"])
@@ -90,6 +77,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<jeweler>.freeze, ["~> 2.0"])
     s.add_dependency(%q<rake-version>.freeze, ["~> 1.0"])
     s.add_dependency(%q<simplecov>.freeze, ["~> 0.16.1"])
+    s.add_dependency(%q<coveralls>.freeze, ["~> 0.8.22"])
   end
 end
 
