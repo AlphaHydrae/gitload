@@ -20,16 +20,10 @@ module Gitload
         puts 'Loading GitLab projects...'
         data = @config.load_or_cache_data 'gitlab' do
 
-          page = 1
           projects = []
 
-          res = Gitlab.projects(membership: true, per_page: 100)
-          projects += res.collect(&:to_h)
-
-          while res.has_next_page?
-            page += 1
-            puts "Loading GitLab projects (page #{page})..."
-            projects += res.next_page.collect(&:to_h)
+          Gitlab.projects(membership: true, per_page: 100).auto_paginate do |project|
+            projects << project.to_h
           end
 
           Utils.stringify_keys(projects)
